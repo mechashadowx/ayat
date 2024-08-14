@@ -36,7 +36,7 @@ export default function Home() {
             ] = `https://quranaudio.pages.dev/2/${chapter}_${result["aya"]}.mp3`;
             result[
                 "tafseer-url"
-            ] = `http://api.quran-tafseer.com/tafseer/1/${chapter}/${result["aya"]}`;
+            ] = `https://api.quran.com/api/v4/quran/tafsirs/164?verse_key=${chapter}:${result["aya"]}`;
 
             setData(result);
             setAudio(null);
@@ -96,7 +96,14 @@ export default function Home() {
             }
 
             const result = await response.json();
-            setTafseer(result);
+            const tafsirs =
+                result["tafsirs"]
+                    .find(
+                        (obj: { resource_id: number }) => obj.resource_id === 16
+                    )
+                    ["text"].replace(/<[^>]*>/g, "") ?? null;
+
+            setTafseer(tafsirs);
             setShowTafseer(true);
         } catch (error) {
         } finally {
@@ -123,7 +130,7 @@ export default function Home() {
                         {showTafseer
                             ? tafseer === null
                                 ? "Not Found"
-                                : tafseer["text"]
+                                : tafseer
                             : data["arabic1"][data["aya"] - 1]}
                     </h1>
                 )}
