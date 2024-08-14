@@ -15,6 +15,9 @@ export default function Home() {
     }, []);
 
     const fetchData = async () => {
+        if (audio) {
+            audio.pause();
+        }
         setShowTafseer(false);
         setIsLoading(true);
         try {
@@ -53,6 +56,7 @@ export default function Home() {
             audio.play();
             return;
         }
+        setIsLoading(true);
         try {
             const response = await fetch(data["audio-url"]);
 
@@ -66,7 +70,8 @@ export default function Home() {
             setAudio(audioObject);
             audioObject.play();
         } catch (error) {
-            console.error("Failed to fetch and play audio:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -100,10 +105,19 @@ export default function Home() {
     };
 
     return (
-        <div className="h-[80%] w-full p-4 max-w-7xl flex flex-col items-center justify-between rounded-lg drop-shadow-2xl">
+        <div className="h-[90%] w-full p-4 max-w-7xl flex flex-col items-center justify-between rounded-lg drop-shadow-2xl">
+            <h1 className="text-3xl text-[#F0F0F0] font-light text-center leading-relaxed">
+                {isLoading || !data ? "" : data["surahNameArabicLong"]}
+            </h1>
+            <h2 className="text-xl text-[#F0F0F0] font-light text-center leading-relaxed">
+                {isLoading || !data ? "" : data["aya"]}
+            </h2>
             <div className="h-full w-full flex items-center justify-center">
                 {isLoading || !data ? (
-                    <span className="animate-ping rounded-full bg-sky-400 opacity-75"></span>
+                    <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-800 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-gray-700"></span>
+                    </span>
                 ) : (
                     <h1 className="text-2xl text-[#F0F0F0] font-light text-center leading-relaxed">
                         {showTafseer

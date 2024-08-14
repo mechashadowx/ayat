@@ -12,10 +12,10 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className="bg-[#191919] m-0 p-0">
-            <head>
-                <link rel="icon" href="/infinite-toolkit/favicon.svg" />
-            </head>
+        <html
+            lang="en"
+            className="bg-[#191919] m-0 p-0 flex justify-center items-center"
+        >
             <body className="flex justify-center items-center">{children}</body>
         </html>
     );
