@@ -20,7 +20,6 @@ export default function Home() {
         if (audio) {
             audio.pause();
         }
-        setShowTafseer(false);
         setIsLoadingAya(true);
         try {
             const chapter = Math.floor(Math.random() * 114) + 1;
@@ -45,6 +44,7 @@ export default function Home() {
             setTafseer(null);
         } catch (error) {
         } finally {
+            setShowTafseer(false);
             setIsLoadingAya(false);
         }
     };
@@ -114,13 +114,15 @@ export default function Home() {
     };
 
     return (
-        <div className="h-[90%] w-full p-4 max-w-7xl flex flex-col items-center justify-between rounded-lg drop-shadow-2xl">
-            <h1 className="text-3xl text-[#F0F0F0] font-light text-center leading-relaxed">
-                {!data ? "" : data["surahNameArabicLong"]}
-            </h1>
-            <h2 className="text-xl text-[#F0F0F0] font-light text-center leading-relaxed">
-                {!data ? "" : data["aya"]}
-            </h2>
+        <div className="min-h-[95vh] w-full p-4 max-w-7xl flex flex-col items-center justify-between gap-12 rounded-lg drop-shadow-2xl">
+            <div className="flex flex-col items-center justify-start gap-3">
+                <h1 className="text-3xl text-[#F0F0F0] font-light text-center leading-relaxed">
+                    {!data ? "" : data["surahNameArabicLong"]}
+                </h1>
+                <h2 className="text-xl text-[#F0F0F0] font-light text-center leading-relaxed">
+                    {!data ? "" : data["aya"]}
+                </h2>
+            </div>
             <div className="h-full w-full flex items-center justify-center">
                 {!data ? (
                     <span className="relative flex h-3 w-3">
@@ -137,7 +139,7 @@ export default function Home() {
                     </h1>
                 )}
             </div>
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center gap-6">
                 {isLoadingAya ? (
                     <div className="h-12 w-12 rounded-full flex items-center justify-center bg-[#191919]">
                         <span className="relative flex h-3 w-3">
