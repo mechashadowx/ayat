@@ -6,8 +6,10 @@ import { AlignCenter, Plus, Volume2 } from "react-feather";
 export default function Home() {
     const [data, setData] = useState(null);
     const [tafseer, setTafseer] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
     const [showTafseer, setShowTafseer] = useState(false);
+    const [isLoadingAya, setIsLoadingAya] = useState(false);
+    const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+    const [isLoadingTafseer, setIsLoadingTafseer] = useState(false);
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -19,7 +21,7 @@ export default function Home() {
             audio.pause();
         }
         setShowTafseer(false);
-        setIsLoading(true);
+        setIsLoadingAya(true);
         try {
             const chapter = Math.floor(Math.random() * 114) + 1;
             const response = await fetch(
@@ -43,7 +45,7 @@ export default function Home() {
             setTafseer(null);
         } catch (error) {
         } finally {
-            setIsLoading(false);
+            setIsLoadingAya(false);
         }
     };
 
@@ -56,7 +58,7 @@ export default function Home() {
             audio.play();
             return;
         }
-        setIsLoading(true);
+        setIsLoadingAudio(true);
         try {
             const response = await fetch(data["audio-url"]);
 
@@ -71,7 +73,7 @@ export default function Home() {
             audioObject.play();
         } catch (error) {
         } finally {
-            setIsLoading(false);
+            setIsLoadingAudio(false);
         }
     };
 
@@ -87,7 +89,7 @@ export default function Home() {
             setShowTafseer(true);
             return;
         }
-        setIsLoading(true);
+        setIsLoadingTafseer(true);
         try {
             const response = await fetch(data["tafseer-url"]);
 
@@ -107,20 +109,20 @@ export default function Home() {
             setShowTafseer(true);
         } catch (error) {
         } finally {
-            setIsLoading(false);
+            setIsLoadingTafseer(false);
         }
     };
 
     return (
         <div className="h-[90%] w-full p-4 max-w-7xl flex flex-col items-center justify-between rounded-lg drop-shadow-2xl">
             <h1 className="text-3xl text-[#F0F0F0] font-light text-center leading-relaxed">
-                {isLoading || !data ? "" : data["surahNameArabicLong"]}
+                {!data ? "" : data["surahNameArabicLong"]}
             </h1>
             <h2 className="text-xl text-[#F0F0F0] font-light text-center leading-relaxed">
-                {isLoading || !data ? "" : data["aya"]}
+                {!data ? "" : data["aya"]}
             </h2>
             <div className="h-full w-full flex items-center justify-center">
-                {isLoading || !data ? (
+                {!data ? (
                     <span className="relative flex h-3 w-3">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-800 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-3 w-3 bg-gray-700"></span>
@@ -136,24 +138,51 @@ export default function Home() {
                 )}
             </div>
             <div className="flex items-center justify-center gap-3">
-                <div
-                    onClick={fetchData}
-                    className="h-12 w-12 rounded-full flex items-center justify-center bg-[#00FFBB]"
-                >
-                    <Plus className="text-[#191919]" />
-                </div>
-                <div
-                    onClick={fetchAndPlayAudio}
-                    className="h-12 w-12 rounded-full flex items-center justify-center bg-[#00FFBB]"
-                >
-                    <Volume2 className="text-[#191919]" />
-                </div>
-                <div
-                    onClick={fetchTafseer}
-                    className="h-12 w-12 rounded-full flex items-center justify-center bg-[#00FFBB]"
-                >
-                    <AlignCenter className="text-[#191919]" />
-                </div>
+                {isLoadingAya ? (
+                    <div className="h-12 w-12 rounded-full flex items-center justify-center bg-[#191919]">
+                        <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-800 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-gray-700"></span>
+                        </span>
+                    </div>
+                ) : (
+                    <div
+                        onClick={fetchData}
+                        className="h-12 w-12 rounded-full flex items-center justify-center bg-[#00FFBB]"
+                    >
+                        <Plus className="text-[#191919]" />
+                    </div>
+                )}
+                {isLoadingAudio ? (
+                    <div className="h-12 w-12 rounded-full flex items-center justify-center bg-[#191919]">
+                        <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-800 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-gray-700"></span>
+                        </span>
+                    </div>
+                ) : (
+                    <div
+                        onClick={fetchAndPlayAudio}
+                        className="h-12 w-12 rounded-full flex items-center justify-center bg-[#00FFBB]"
+                    >
+                        <Volume2 className="text-[#191919]" />
+                    </div>
+                )}
+                {isLoadingTafseer ? (
+                    <div className="h-12 w-12 rounded-full flex items-center justify-center bg-[#191919]">
+                        <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-800 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-gray-700"></span>
+                        </span>
+                    </div>
+                ) : (
+                    <div
+                        onClick={fetchTafseer}
+                        className="h-12 w-12 rounded-full flex items-center justify-center bg-[#00FFBB]"
+                    >
+                        <AlignCenter className="text-[#191919]" />
+                    </div>
+                )}
             </div>
         </div>
     );
