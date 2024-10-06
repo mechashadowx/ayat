@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AlignCenter, Plus, Volume2 } from "react-feather";
+import { AlignCenter, Download, Plus, Volume2 } from "react-feather";
 
 export default function Home() {
     const [data, setData] = useState(null);
@@ -75,6 +75,15 @@ export default function Home() {
         } finally {
             setIsLoadingAudio(false);
         }
+    };
+
+    const downloadAudio = async () => {
+        const link = document.createElement('a');
+        link.href = data?.['audio-url'] ?? '';
+        link.setAttribute('download', 'audio-file.mp3');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
     };
 
     const fetchTafseer = async () => {
@@ -168,6 +177,21 @@ export default function Home() {
                         className="h-12 w-12 rounded-full flex items-center justify-center bg-[#00FFBB]"
                     >
                         <Volume2 className="text-[#191919]" />
+                    </div>
+                )}
+                {false ? (
+                    <div className="h-12 w-12 rounded-full flex items-center justify-center bg-[#191919]">
+                        <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-800 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-gray-700"></span>
+                        </span>
+                    </div>
+                ) : (
+                    <div
+                        onClick={downloadAudio}
+                        className="h-12 w-12 rounded-full flex items-center justify-center bg-[#00FFBB]"
+                    >
+                        <Download className="text-[#191919]" />
                     </div>
                 )}
                 {isLoadingTafseer ? (
